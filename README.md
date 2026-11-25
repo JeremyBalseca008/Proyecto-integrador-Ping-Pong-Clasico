@@ -119,5 +119,5 @@ La declaración distingue las aportaciones documentadas del equipo de la asisten
 
 | Herramienta | Para qué la usamos | Qué revisamos o cambiamos nosotros |
 |---|---|---|
-| ChatGPT (OpenAI) | Apoyo en el borrador de Fase 3, revisión y simplificación de comentarios, organización de archivos y redacción del README. | El equipo proporcionó los archivos de código y diseño, subió los diagramas originales y agregó el enlace del video. No se han detallado otros cambios manuales del código. |
+| ChatGPT (OpenAI) | Apoyo en el borrador de Fase 3, revisión y simplificación de comentarios, organización de archivos y redacción del README. | El equipo proporcionó los archivos de código y diseño, subió los diagramas originales y agregó el enlace del video.|
 | Gemini / asistente de IA | Revisión del diseño y observaciones de la Fase 1, según la declaración del informe de Fase 2. | Según el informe, el equipo revisó la condición de victoria de cinco puntos, el alcance del modo local y las inconsistencias de los escenarios. |
