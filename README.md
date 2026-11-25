@@ -1,12 +1,8 @@
 # Ping Pong clásico
 
-Proyecto integrador de Lógica de Programación de la Universidad Internacional del Ecuador (UIDE), paralelo C.
+Proyecto integrador de primer nivel · Lógica de Programación · UIDE · Paralelo C
 
-## Descripción
-
-El proyecto consiste en un videojuego de Ping Pong para dos jugadores desarrollado en Python. Cada jugador controla una paleta y debe evitar que la pelota salga por su lado de la cancha. El jugador contrario obtiene un punto cuando esto sucede. La partida termina cuando uno de los jugadores alcanza cinco puntos.
-
-El juego utiliza Pygame para la interfaz gráfica y sockets TCP para comunicar a los jugadores mediante un servidor que controla la lógica y envía su estado a ambos clientes.
+Videojuego de Ping Pong para dos jugadores desarrollado en Python. Cada jugador controla una paleta y debe evitar que la pelota salga por su lado de la cancha. Gana quien alcanza cinco puntos. El diseño inicial por turnos evolucionó hacia una partida gráfica en tiempo real mediante Pygame y una arquitectura cliente-servidor TCP en red LAN.
 
 ## Integrantes
 
@@ -14,99 +10,114 @@ El juego utiliza Pygame para la interfaz gráfica y sockets TCP para comunicar a
 - Gabriel Condor
 - Jeremy Balseca
 
-## Estructura
+## Cómo ejecutarlo
 
-| Archivo | Función |
-| --- | --- |
-| juego.py | Menú principal, validación de IP y puerto, creación y conexión a partidas. |
-| game_logic.py | Movimiento, límites, rebotes, marcador, resultado y conversión del estado a texto. |
-| server.py | Acepta dos conexiones, recibe movimientos y sincroniza la partida. |
-| client.py | Lee el teclado, recibe el estado y dibuja la cancha y el resultado en Pygame. |
-| [diseno/](diseno/) | Tres diagramas RAPTOR originales y diagrama de arquitectura de la Fase 2. |
-| requirements.txt | Dependencia de Pygame. |
-| LICENSE | Licencia MIT. |
-
-### Diagramas de diseño
-
-- [DF1_partida.rap](diseno/DF1_partida.rap)
-- [DF2_validacion.rap](diseno/DF2_validacion.rap)
-- [DF3_fin.rap](diseno/DF3_fin.rap)
-- [arquitectura.drawio](diseno/arquitectura.drawio)
-
-El diagrama de arquitectura se conserva como evidencia de la Fase 2: utiliza el puerto 5555 y jugadas por turnos (I, C y D). La implementación actual utiliza el puerto 5000 por defecto (configurable), mensajes U, D y N, y movimientos continuos.
-
-## Instalación
-
-Se necesita Python 3, pip, Pygame y un entorno gráfico. Desde la carpeta del repositorio:
+Requiere Python 3, pip y un entorno gráfico. Desde la carpeta del repositorio, instalar Pygame y ejecutar el menú:
 
 ```bash
 python -m pip install -r requirements.txt
 python juego.py
 ```
 
-En Ubuntu se puede utilizar python3 en lugar de python. Si es necesario, crear un entorno virtual con python3 -m venv .venv y activarlo con source .venv/bin/activate antes de instalar.
+Para ejecutar por separado el archivo de lógica:
 
-## Cómo jugar
+```bash
+python game_logic.py
+```
 
-**Jugador 1:** ejecutar python juego.py, elegir la opción 1 (Crear partida) y presionar Enter para utilizar el puerto 5000, o introducir otro puerto válido.
+En la versión actual, este segundo comando carga las definiciones de la clase Juego y las funciones auxiliares, pero no inicia una demostración interactiva de DF2 y DF3. La lógica se utiliza al ejecutar una partida desde el menú.
 
-**Jugador 2:** ejecutar python juego.py, elegir la opción 2 (Unirse), introducir la IPv4 del equipo servidor y utilizar el mismo puerto. Ambos equipos deben tener conectividad de red. Se puede consultar la IP con ipconfig en Windows o hostname -I en Ubuntu.
+En Ubuntu se puede utilizar `python3` en lugar de `python`. Si el sistema requiere un entorno virtual, crearlo con `python3 -m venv .venv`, activarlo con `source .venv/bin/activate` e instalar las dependencias.
 
-Para probar la conexión en un solo equipo, abrir dos terminales y usar 127.0.0.1 como IP del servidor. Cada ventana recibe el teclado cuando tiene el foco; no es un modo local de dos jugadores con teclado compartido.
+### Cómo jugar
 
-| Tecla | Acción |
-| --- | --- |
-| W o flecha arriba | Subir la paleta |
-| S o flecha abajo | Bajar la paleta |
-| Sin teclas de movimiento | Mantener la posición |
+1. Jugador 1: ejecutar `python juego.py`, seleccionar **Crear partida** y elegir el puerto (5000 por defecto).
+2. Jugador 2: ejecutar `python juego.py`, seleccionar **Unirse a una partida** e introducir la dirección IPv4 del servidor y el mismo puerto.
+3. Ambos jugadores pueden utilizar W o flecha arriba para subir la paleta, y S o flecha abajo para bajarla.
 
-## Funcionamiento
+Los equipos deben tener conectividad entre sí. La IP del servidor se puede consultar con `ipconfig` en Windows o `hostname -I` en Ubuntu. Para una prueba en un mismo equipo, abrir dos terminales y utilizar la IP `127.0.0.1`. Cada ventana recibe las entradas del teclado cuando tiene el foco; no es un modo local con teclado compartido.
 
-El servidor espera dos conexiones TCP, asigna el número de jugador según el orden de conexión y recibe U, D o N para interpretar el movimiento. La lógica mantiene las paletas dentro de la cancha, actualiza la pelota, controla las colisiones y suma puntos. Tras cada anotación, reinicia la pelota.
+## Estructura del repositorio
 
-El servidor envía ocho valores separados por comas y terminados con un salto de línea: coordenadas de la pelota, posición de cada paleta, puntos de ambos jugadores, indicador de fin y número del ganador. Los clientes representan estos datos en una ventana de 800 × 500 píxeles.
+| Archivo | Qué hace | Estado |
+|---|---|---|
+| [`juego.py`](juego.py) | Menú que se repite hasta Salir, valida la IP y el puerto, permite crear o unirse a una partida. | Implementado |
+| [`game_logic.py`](game_logic.py) | Movimiento, límites de las paletas, rebotes, marcador y fin de la partida (DF2 y DF3 adaptados). | Implementado para el juego gráfico; demostración independiente de Fase 3 no incluida |
+| [`server.py`](server.py) | Servidor TCP: acepta dos conexiones, recibe movimientos y sincroniza la partida. | Implementado (avance de Fase 4) |
+| [`client.py`](client.py) | Cliente TCP: lee el teclado, recibe el estado y dibuja la partida mediante Pygame. | Implementado (avance de Fase 4) |
+| [`diseno/`](diseno/) | Diagramas RAPTOR y arquitectura de la Fase 2. | Subido |
+| [`requirements.txt`](requirements.txt) | Dependencia de Pygame. | Incluido |
+| [`LICENSE`](LICENSE) | Licencia MIT. | Incluido |
+| `.gitignore` | Excluye archivos temporales y otros archivos generados durante el desarrollo. | Incluido |
+| `README.md` | Documentación y créditos del proyecto. | Incluido |
 
-## Relación con el diseño de la Fase 2
+### Diagramas de la Fase 2
 
-| Diagrama de la Fase 2 | Archivo y líneas | Qué cambió |
-| --- | --- | --- |
-| DF1_partida.rap | juego.py, 35–70; server.py, 49–62; game_logic.py, 55–95 | El menú Jugar/Salir pasó a Crear partida, Unirse y Salir. El ciclo de turnos se sustituyó por actualizaciones continuas. |
-| DF2_validacion.rap | client.py, 54–64; server.py, 7–22; game_logic.py, 38–53 | Las letras I, C y D se sustituyeron por controles de teclado. Se limitan las paletas y se interpretan los mensajes de movimiento. |
-| DF3_fin.rap | game_logic.py, 10 y 97–104; client.py, 76–86 | Se corrigió la puntuación de victoria de dos a cinco. La partida continúa si ninguno llega a cinco. |
+- [DF1_partida.rap](diseno/DF1_partida.rap)
+- [DF2_validacion.rap](diseno/DF2_validacion.rap)
+- [DF3_fin.rap](diseno/DF3_fin.rap)
+- [arquitectura.drawio](diseno/arquitectura.drawio)
 
-**Alcance:** esta versión incluye avances de Fase 4 (interfaz gráfica, partida completa y sockets). No es una traducción literal del prototipo de consola de la Fase 3. No incorpora la validación independiente que repite la lectura por formato y reglas ni una rama de empate. Ejecutar game_logic.py directamente no muestra demostraciones. Para la entrega de Fase 3 se recomienda conservar también la versión de consola exigida y consultar al docente.
+## Del diseño al código
 
-## Verificación del código
+| Diagrama de la Fase 2 | Archivo y líneas | Qué cambió al traducirlo |
+|---|---|---|
+| DF1 Partida completa (solo el menú) | [`juego.py`, líneas 35–70](juego.py#L35-L70) | El Loop de RAPTOR pasó a un while y las decisiones a if, elif y else. El menú Jugar/Salir se amplió a Crear partida, Unirse y Salir. |
+| DF2 Validación de la jugada | [`game_logic.py`, líneas 38–53](game_logic.py#L38-L53); [`server.py`, líneas 7–22](server.py#L7-L22); [`client.py`, líneas 54–64](client.py#L54-L64) | Las entradas I, C y D del prototipo se sustituyeron por movimientos del teclado. Las condiciones if mantienen las paletas dentro de la cancha y el servidor interpreta los mensajes U, D y N. No se conserva el ciclo independiente de validación por formato y reglas del DF2 original. |
+| DF3 Fin de la partida | [`game_logic.py`, línea 10](game_logic.py#L10) y [líneas 97–104](game_logic.py#L97-L104); [`client.py`, líneas 76–86](client.py#L76-L86) | Las decisiones del diagrama se traducen a condiciones if sobre el marcador. Se cambió el límite de dos a cinco puntos. El juego termina con la victoria de un jugador y continúa si ninguno alcanza cinco; no existe una condición explícita de empate en la implementación actual. |
 
-| Caso | Resultado esperado |
-| --- | --- |
+### Evolución del diseño
+
+Los diagramas originales se conservan como evidencia de la Fase 2. El diseño utilizaba turnos, entradas I, C y D y el puerto 5555. La versión actual utiliza movimiento continuo, mensajes U (subir), D (bajar) y N (sin movimiento), y el puerto 5000 por defecto, que se puede configurar.
+
+El ciclo completo de la partida se encuentra en [`server.py`, líneas 49–62](server.py#L49-L62), y el movimiento, rebote y puntuación en [`game_logic.py`, líneas 55–95](game_logic.py#L55-L95). El servidor actualiza el estado y los clientes representan la cancha y el marcador en una ventana de 800 × 500 píxeles.
+
+**Alcance de Fase 3:** el repositorio contiene avances de Fase 4, como la partida completa, la interfaz gráfica y los sockets. Para cumplir literalmente con la consigna de Fase 3, falta la demostración independiente de DF2 que repite una jugada inválida y la de DF3 que distingue los cuatro resultados, incluido el empate. El juego gráfico actual se conserva sin modificaciones.
+
+### Casos de verificación
+
+| Caso | Comportamiento esperado según el código |
+|---|---|
 | Opción 9 en el menú | Mensaje de error y repetición del menú. |
-| Puerto fuera del intervalo 1024–65535 | Se vuelve a solicitar. |
+| Puerto fuera de 1024–65535 | Se vuelve a solicitar. |
 | Paleta en el borde | Permanece dentro de la cancha. |
-| Marcador 5–3 | Gana J1. |
-| Marcador 3–5 | Gana J2. |
-| Marcador 4–4 | Continúa. |
+| Marcador 5–3 | Gana el Jugador 1. |
+| Marcador 3–5 | Gana el Jugador 2. |
+| Marcador 4–4 | La partida continúa. |
 | Marcador artificial 5–5 | El código actual asigna la victoria a J2; no hay rama de empate. |
-| Dos clientes en LAN | Se espera sincronización de ambos jugadores. |
+| Dos clientes conectados | Reciben el estado enviado por el servidor. |
 
-Se comprobó la sintaxis de los cuatro archivos Python, los límites de las paletas, el rebote vertical de la pelota, la anotación de puntos, la conversión del estado y los cuatro escenarios de marcador indicados (incluido el comportamiento actual ante 5–5). También se verificó una conexión TCP local con dos clientes de prueba sin interfaz gráfica: el servidor asignó los jugadores y envió el mismo estado a ambos. La prueba no acredita la ejecución de Pygame ni la conectividad entre dos equipos de la LAN. Los casos del menú y del puerto se describen como resultados esperados.
+La revisión anterior registró comprobaciones de lógica y conexión TCP local sin interfaz gráfica. Estos casos documentan el comportamiento esperado y no acreditan por sí solos una prueba gráfica de Pygame ni una prueba entre dos equipos físicos de la LAN.
 
 ## Video explicativo
 
-[Ver video explicativo](https://mailinternacionaledu-my.sharepoint.com/:v:/g/personal/jebalsecaba_uide_edu_ec/IQDjuqG1WgX_T4zvCW53mOB4AZ_jf8wegpp35otjB2dxw2U?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=AeDoNX)
+[Ver video explicativo del equipo](https://mailinternacionaledu-my.sharepoint.com/:v:/g/personal/jebalsecaba_uide_edu_ec/IQDjuqG1WgX_T4zvCW53mOB4AZ_jf8wegpp35otjB2dxw2U?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=AeDoNX)
 
-## Autoría y créditos
-
-El proyecto corresponde a Christopher Torres, Gabriel Condor y Jeremy Balseca. Los códigos de partida y los diagramas fueron proporcionados por el equipo para revisión.
-
-- Python y sus módulos estándar socket, threading y time.
-- [Pygame](https://www.pygame.org/docs/): biblioteca para la interfaz gráfica.
-- RAPTOR y draw.io: herramientas de diseño utilizadas en la Fase 2.
-- Los elementos gráficos se dibujan mediante código; no se identificaron imágenes externas en los cuatro archivos Python.
-- ChatGPT (OpenAI): apoyo en el borrador de la Fase 3, revisión de comentarios, organización del repositorio y documentación.
-- Gemini/asistente de IA: revisión del diseño, según la declaración de la Fase 2.
-- Aportaciones documentadas del equipo: elaboración del diseño de la Fase 2, entrega del código fuente para revisión y carga de los diagramas y del enlace del video en GitHub. No se atribuyen aportaciones individuales ni pruebas adicionales que no estén confirmadas.
+La consigna establece un máximo de cinco minutos y solicita explicar la traducción de los diagramas, ejecutar el menú, mostrar una jugada inválida y demostrar el fin de la partida. La duración, el contenido y los permisos de acceso del video deben comprobarse con el archivo original.
 
 ## Licencia
 
-El código propio está publicado bajo la licencia de código abierto MIT incluida en [LICENSE](LICENSE). Las bibliotecas y herramientas externas mantienen sus respectivas licencias.
+Este proyecto se distribuye bajo la licencia de código abierto MIT. El texto completo se encuentra en el archivo [`LICENSE`](LICENSE). Los recursos externos conservan sus respectivas licencias.
+
+## Declaración de autoría
+
+El proyecto corresponde a Christopher Torres, Gabriel Condor y Jeremy Balseca. Los integrantes aportaron el diseño de la Fase 2, los archivos de código fuente para revisión, los diagramas y el video explicativo. El repositorio incorpora apoyo de herramientas de inteligencia artificial, según se detalla en los créditos. Los recursos de terceros se identifican en la sección siguiente.
+
+La declaración distingue las aportaciones documentadas del equipo de la asistencia recibida; no atribuye contribuciones individuales ni cambios que no estén confirmados.
+
+## Créditos
+
+| Recurso (código, librería, imagen…) | Autor o fuente | Dónde se usa | Licencia |
+|---|---|---|---|
+| Python y módulos estándar (socket, threading y time) | [Python Software Foundation](https://www.python.org/) | `juego.py`, `server.py`, `client.py` y lógica general | PSF License |
+| Pygame | [Comunidad de Pygame](https://www.pygame.org/docs/) | `client.py`, interfaz gráfica y lectura del teclado | LGPL 2.1 |
+| Diagramas RAPTOR | Elaboración del equipo con RAPTOR | `diseno/DF1_partida.rap`, `DF2_validacion.rap` y `DF3_fin.rap` | MIT para los aportes propios; la herramienta no se distribuye |
+| Diagrama de arquitectura | Elaboración del equipo con [draw.io](https://www.diagrams.net/) | `diseno/arquitectura.drawio` | MIT para los aportes propios; la herramienta no se distribuye |
+| Elementos gráficos del juego | Figuras dibujadas mediante el código de Pygame | `client.py`, líneas 66–83 | MIT para el código propio; no se identificaron imágenes externas |
+
+### Uso de IA
+
+| Herramienta | Para qué la usamos | Qué revisamos o cambiamos nosotros |
+|---|---|---|
+| ChatGPT (OpenAI) | Apoyo en el borrador de Fase 3, revisión y simplificación de comentarios, organización de archivos y redacción del README. | El equipo proporcionó los archivos de código y diseño, subió los diagramas originales y agregó el enlace del video. No se han detallado otros cambios manuales del código. |
+| Gemini / asistente de IA | Revisión del diseño y observaciones de la Fase 1, según la declaración del informe de Fase 2. | Según el informe, el equipo revisó la condición de victoria de cinco puntos, el alcance del modo local y las inconsistencias de los escenarios. |
