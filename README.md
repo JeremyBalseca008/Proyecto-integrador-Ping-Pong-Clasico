@@ -22,7 +22,7 @@ El juego utiliza Pygame para la interfaz gráfica y sockets TCP para comunicar a
 | game_logic.py | Movimiento, límites, rebotes, marcador, resultado y conversión del estado a texto. |
 | server.py | Acepta dos conexiones, recibe movimientos y sincroniza la partida. |
 | client.py | Lee el teclado, recibe el estado y dibuja la cancha y el resultado en Pygame. |
-| diseno/ | Carpeta reservada para los diagramas originales de la Fase 2, pendientes de carga. |
+| diseno/ | Diagramas de la Fase 2; arquitectura de red incluida, archivos RAPTOR pendientes de carga. |
 | requirements.txt | Dependencia de Pygame. |
 | LICENSE | Licencia MIT. |
 
